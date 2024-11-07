@@ -1,0 +1,100 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden; /* Evita rolagem horizontal */
+  }
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to left, #9ac39ace, #000000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    min-height: 100vh
+}
+
+.container {
+    background: linear-gradient(to right, #0949b1, #afa1bd);
+    padding: 120px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+button {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #1cafcf68;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+button:hover {
+    background-color: #001e47eb;
+}
+
+.copyIcon {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #00000068;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.copyIcon:hover {
+    color: #0056b3;
+}
+
+.hidden {
+    display: none;
+}
+
+#qrcode {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 767px) {
+   
+    .container {
+      padding-top: 10px;
+      min-height: 100vh;
+    }
+  }

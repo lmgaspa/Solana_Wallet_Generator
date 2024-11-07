@@ -1,0 +1,293 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Cryptocurrency Address Generation API",
+    "description": "API for creating and managing BTC, Dogecoin (DOGE), Solana (SOL), and DianaCoin (Solana Token) addresses"
+  },
+  "schemes": ["https"],
+  "host": "apilogin-m87n.onrender.com",
+  "basePath": "/api",
+  "paths": {
+    "/create_btc_address": {
+      "post": {
+        "summary": "Create Bitcoin (BTC) Address",
+        "tags": ["BITCOIN CREATE ADDRESS"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "BTC address created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "btcAddress": {
+                  "type": "string",
+                  "example": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request error: userId is required or invalid",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "User ID is required"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Failed to create or update BTC record"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create_doge_address": {
+      "post": {
+        "summary": "Create Dogecoin (DOGE) Address",
+        "tags": ["DOGECOIN CREATE ADDRESS"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "DOGE address created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dogeAddress": {
+                  "type": "string",
+                  "example": "DH5yaieqoZN36fDVciNyRueRGvGLR3mr7L"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request error: userId is required or invalid",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "User ID is required"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Failed to create or update DOGE record"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create_sol_address": {
+      "post": {
+        "summary": "Create Solana (SOL) Address",
+        "tags": ["SOLANA CREATE ADDRESS"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "SOL address created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "solAddress": {
+                  "type": "string",
+                  "example": "2k1J9z1bP5QGefi2DMPTfTL5SLmv7DivfNa"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request error: userId is required or invalid",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "User ID is required"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Failed to create or update SOL record"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create_diana_address": {
+      "post": {
+        "summary": "Create DianaCoin Address",
+        "tags": ["DIANACOIN CREATE ADDRESS"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Diana Coin address created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dianaAddress": {
+                  "type": "string",
+                  "example": "5UjzQ1bP5QGefi2DMPTfTL5SLmv7DzvBjN"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request error: userId is required or invalid",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "User ID is required"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Failed to create or update Diana Coin record"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sol_address": {
+      "get": {
+        "summary": "Create a Adress for Solana",
+        "tags": ["SOLANA ADDRESS GENERATOR"],
+        "responses": {
+          "200": {
+            "description": "Serves sol_address.html",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sol_wallet": {
+      "get": {
+        "summary": "Create a Wallet for Solana",
+        "tags": ["SOLANA WALLET GENERATOR"],
+        "responses": {
+          "200": {
+            "description": "Serves sol_wallet.html",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Link to Solana Wallet Generator API",
+    "url": "https://solana-wallet-generator.onrender.com"
+  }
+}

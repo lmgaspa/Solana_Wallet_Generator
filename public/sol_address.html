@@ -1,0 +1,73 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solana Cryptocurrency Address Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Solana Cryptocurrency Address Generator</h1>
+    <form id="addressForm">
+      <div class="input-group">
+        <label for="solana_address">Solana Address:</label>
+        <div class="input-wrapper">
+          <input type="text" id="solana_address" name="solana_address" value="" required readonly />
+          <i class="fas fa-copy copyIcon hidden" data-clipboard-target="#solana_address"></i>
+        </div>
+        <button type="button" id="generateSolanaButton">Generate Solana Address</button><br><br>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('generateSolanaButton').addEventListener('click', function () {
+      fetch('https://solana-wallet-generator.onrender.com/api/sol_generate_wallet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('solana_address').value = data.solAddress; // Updated to use solAddress
+          console.log(data.solAddress); // Log solAddress to the console
+          
+          // Show copy icon
+          document.querySelectorAll('.copyIcon').forEach(icon => {
+            icon.classList.remove('hidden');
+          });
+
+          // Generate QR code
+          var qrcodeDiv = document.getElementById('qrcode');
+          qrcodeDiv.innerHTML = "";
+          new QRCode(qrcodeDiv, data.solAddress);
+        })
+        .catch(error => {
+          console.error('Error generating Solana wallet:', error);
+        });
+    });
+
+    var clipboard = new ClipboardJS('.copyIcon');
+
+    clipboard.on('success', function (e) {
+      var currentDate = new Date().toLocaleString();
+      var copiedText = e.text;
+      var targetId = e.trigger.getAttribute('data-clipboard-target');
+      var targetElement = document.querySelector(targetId);
+      var targetName = targetElement.name;
+      alert('Copied the text: ' + targetName + ': ' + copiedText + ' on ' + currentDate);
+      e.clearSelection();
+    });
+
+    clipboard.on('error', function (e) {
+      alert('Failed to copy text');
+    });
+  </script>
+</body>
+</html>
