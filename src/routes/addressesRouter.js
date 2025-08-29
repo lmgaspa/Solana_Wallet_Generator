@@ -1,9 +1,9 @@
 const express = require('express');
 const AddressModel = require('../models/addressModel');
-const { generateBTC, generateDOGE, generateSOL, generateDIANA } = require('../clients/addressGeneratorClient');
+const { generateBTC, generateDOGE, generateSOL } = require('../clients/addressGeneratorClient');
 
 const router = express.Router();
-const coins = new Set(['btc', 'doge', 'sol', 'diana']);
+const coins = new Set(['btc', 'doge', 'sol']);
 
 // POST /api/addresses/:coin
 router.post('/:coin', async (req, res) => {
@@ -24,7 +24,6 @@ router.post('/:coin', async (req, res) => {
     if (coin === 'btc') newAddress = await generateBTC(userId);
     if (coin === 'doge') newAddress = await generateDOGE(userId);
     if (coin === 'sol') newAddress = await generateSOL(userId);
-    if (coin === 'diana') newAddress = await generateDIANA(userId);
 
     if (!newAddress) throw new Error(`Endereço ${coin.toUpperCase()} não retornado`);
 
