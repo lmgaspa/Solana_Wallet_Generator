@@ -1,59 +1,90 @@
-const cors = require('cors');
+require('dotenv').config();
+
 const express = require('express');
-const app = express();
+const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
-const { connectToDatabase } = require('./src/database/index');
+
+const { connectMongoose } = require('./src/database/mongoose');
+const addressesRouter = require('./src/routes/addressesRouter');
+
+// Swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDocument = require('./swagger.json');
-const create_sol_address = require('./src/routes/solRoutes')
-const create_btc_address = require('./src/routes/btcRoutes')
-const create_doge_address = require('./src/routes/dogeRoutes')
-const create_diana_address = require('./src/routes/dianaRoutes')
-const sol_generate_wallet = require('./src/routes/sol_generate_wallet')
-const create_diana_finbo = require('./src/routes/diana_finbo')
 
-// Middleware CORS com configuração específica
-connectToDatabase();
+const PORT = Number(process.env.PORT || 3000);
+const CORS_ORIGINS = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
 
-app.use(cors())
+const app = express();
+
+// Segurança, compressão, logs
+app.use(helmet());
+app.use(compression());
+app.use(morgan(process.env.LOG_FORMAT || 'dev'));
+
+// CORS
 app.use(cors({
-  origin: ['*', 'https://dianaglobal.com.br', 'http://localhost:3000'],
-  methods: ['GET', 'POST'],
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (CORS_ORIGINS.length === 0 || CORS_ORIGINS.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: process.env.CORS_CREDENTIALS === 'true'
 }));
 
-  // Middleware para JSON e arquivos estáticos
+// Rate limit
+app.use('/api', rateLimit({
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS || 60000),
+  max: Number(process.env.RATE_LIMIT_MAX || 120),
+  standardHeaders: true,
+  legacyHeaders: false,
+}));
 
-app.use(express.json());
+// JSON e estáticos
+app.use(express.json({ limit: '1mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'sol_wallet.html'));
+// Health
+app.get('/health', (_, res) => res.json({ ok: true }));
+
+// Páginas
+app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'sol_wallet.html')));
+app.get('/sol_address', (_, res) => res.sendFile(path.join(__dirname, 'public', 'sol_address.html')));
+
+// API
+app.use('/api/addresses', addressesRouter);
+
+// Swagger
+const swaggerSpec = swaggerJsdoc({ definition: swaggerDocument, apis: ['./src/routes/*.js'] });
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+
+// 404
+app.use((req, res) => res.status(404).json({ error: 'Not Found' }));
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err.message);
+  res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 
-app.get('/sol_address', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'sol_address.html'));
-});
-
-app.use('/api', sol_generate_wallet);
-app.use('/api', create_btc_address);
-app.use('/api', create_sol_address);
-app.use('/api', create_doge_address);
-app.use('/api', create_diana_address);
-app.use('/api', create_diana_finbo);
-
-// Configuração do Swagger
-const options = {
-  definition: swaggerDocument,
-  apis: ['./src/routes/*.js'], // Caminho para os arquivos com anotações Swagger
-};
-const swaggerSpec = swaggerJsdoc(options);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-const port = 3000;
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
-});
+// Bootstrap
+(async () => {
+  try {
+    await connectMongoose();
+    app.listen(PORT, () => console.log(`🚀 API listening on port ${PORT}`));
+  } catch (e) {
+    console.error('❌ Failed to start server:', e);
+    process.exit(1);
+  }
+})();
 
 module.exports = app;
