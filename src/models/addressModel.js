@@ -7,6 +7,7 @@ const addressSchema = new mongoose.Schema({
   btcAddress:   { type: String, default: null },
   solAddress:   { type: String, default: null },
   dogeAddress:  { type: String, default: null },
+  dianaAddress: { type: String, default: null }
 }, {
   collection: 'exchangeAddress',
   timestamps: true,
@@ -18,5 +19,6 @@ const addressSchema = new mongoose.Schema({
 addressSchema.index({ btcAddress: 1 },   { unique: true, partialFilterExpression: { btcAddress: { $type: 'string' } } });
 addressSchema.index({ solAddress: 1 },   { unique: true, partialFilterExpression: { solAddress: { $type: 'string' } } });
 addressSchema.index({ dogeAddress: 1 },  { unique: true, partialFilterExpression: { dogeAddress: { $type: 'string' } } });
+addressSchema.index({ dianaAddress: 1 }, { unique: true, partialFilterExpression: { dianaAddress: { $type: 'string' } } });
 
 module.exports = mongoose.model('Address', addressSchema);
