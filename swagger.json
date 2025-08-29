@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Diana Exchange API",
-    "description": "API para geração e persistência de endereços BTC, DOGE, SOL e DianaCoin"
+    "description": "API for generating and persisting BTC, DOGE, SOL and DianaCoin (alias of Solana) addresses"
   },
   "servers": [
     { "url": "https://apilogin-m87n.onrender.com/api" }
@@ -11,28 +11,75 @@
   "paths": {
     "/addresses/{coin}": {
       "post": {
-        "summary": "Cria/retorna endereço por moeda",
+        "summary": "Create or retrieve an address by coin type",
         "parameters": [
           {
             "name": "coin",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "enum": ["btc", "doge", "sol", "diana"] }
+            "schema": {
+              "type": "string",
+              "enum": ["btc", "doge", "sol", "diana"]
+            },
+            "description": "The cryptocurrency type. `diana` is an alias that returns the same address as `sol`."
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "type": "object", "properties": { "userId": { "type": "string" } }, "required": ["userId"] }
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "example": "user123@example.com"
+                  }
+                },
+                "required": ["userId"]
+              }
             }
           }
         },
         "responses": {
-          "200": { "description": "Endereço já existente" },
-          "201": { "description": "Endereço criado" },
-          "400": { "description": "Erro de entrada" },
-          "500": { "description": "Erro interno" }
+          "200": {
+            "description": "Address already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": { "btcAddress": "1Atbwvn3B9ZYVnDEJVgpCZmjh4kyyYfWUU" }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "New address successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": { "solAddress": "9H32abc123..." }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request (e.g., missing userId)",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "example": { "error": "User ID is required" } }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "example": { "error": "Failed to create or update record" } }
+              }
+            }
+          }
         }
       }
     }
